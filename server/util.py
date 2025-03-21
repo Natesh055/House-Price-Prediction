@@ -18,7 +18,7 @@ def getestimatedprice(location, sqft, bhk, bath):
     x[2] = bhk
 
     if loc_index >= 0:
-        x[loc_index] = 1  # Set the location one-hot encoding
+        x[loc_index + 3] = 1  # Set the location one-hot encoding, shift index by 3
 
     return round(__model.predict([x])[0], 2)
 
@@ -33,7 +33,7 @@ def load_saved_artifacts():
 
     with open("./artifacts/columns.json", 'r') as f:
         __data_columns = json.load(f)['data_columns']
-        __locations = __data_columns[3:]
+        __locations = __data_columns[3:]  # Location names start after the first 3 features
 
     with open("./artifacts/banglore_home_prices_model.pickle", 'rb') as f:
         __model = pickle.load(f)
@@ -43,5 +43,5 @@ def load_saved_artifacts():
 if __name__ == "__main__":
     load_saved_artifacts()
     print(getlocationnames())
-    print(getestimatedprice('Indira Nagar', 1000, 3, 3))
-    print(getestimatedprice('1st Phase JP Nagar',1000, 3, 3))
+    print(getestimatedprice('Indira Nagar', 1000, 3, 3))  # Test with actual location and parameters
+    print(getestimatedprice('1st Phase JP Nagar', 1000, 3, 3))  # Test with another location
